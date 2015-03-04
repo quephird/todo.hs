@@ -1,7 +1,7 @@
 {-# LANGUAGE EmptyDataDecls       #-}
 {-# LANGUAGE FlexibleContexts     #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE GADTs                      #-}
+{-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE GADTs                #-}
 {-# LANGUAGE OverloadedStrings    #-}
 {-# LANGUAGE QuasiQuotes          #-}
 {-# LANGUAGE TemplateHaskell      #-}
@@ -10,16 +10,12 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad (forM_)
 import Data.Time (getCurrentTime)
-import Database.Persist.Sql (entityVal, insert, runMigration)
-import Text.Blaze.Html5 (li, toHtml, ul)
-import Text.Blaze.Html.Renderer.Text (renderHtml)
-import Web.Scotty (get, html, param, redirect, scotty)
+import Database.Persist.Sql (runMigration)
+import Web.Scotty (get, param, redirect, scotty)
 
 import Todo.Models.Post
-
-blaze = html . renderHtml
+import Todo.Views.Post
 
 main = do
   runDb $ runMigration migrateAll
@@ -27,12 +23,8 @@ main = do
     get "/create/:title" $ do
       _title <- param "title"
       now <- liftIO getCurrentTime
-      liftIO $ runDb $ insert $ Post _title "some content" now
+      savePost _title "some content" now
       redirect "/"
 
     get "/" $ do
-      _posts <- liftIO readPosts
-      let posts = map (postTitle . entityVal) _posts
-      blaze $ do
-        ul $ do
-          forM_ posts $ \post -> li (toHtml post)
+      renderPosts
