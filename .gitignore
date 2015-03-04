@@ -1,0 +1,5 @@
+.DS_Store
+dev.sqlite3
+dist/
+cabal.sandbox.config
+.cabal-sandbox
