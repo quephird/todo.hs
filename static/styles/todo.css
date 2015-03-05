@@ -1,3 +1,24 @@
-table, th, td {
-   border: 1px solid black;
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width:70%;
+    margin-left:15%;
+    margin-right:15%;
+}
+
+th {
+    background: #EED2EE;
+    text-align: left;
+}
+tr:nth-child(even) {
+    background: #F0F0FF;
+}
+tr:nth-child(odd) {
+    background: #FFFFFF;
+}
+
+th, td {
+   border: none;
+   padding: 5;
+   margin: 0;
 }

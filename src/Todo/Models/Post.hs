@@ -13,15 +13,15 @@
 
 module Todo.Models.Post where
 
-import Control.Monad.IO.Class (liftIO, MonadIO)
+import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Logger (NoLoggingT, runNoLoggingT)
-import Control.Monad.Trans.Resource (runResourceT, ResourceT)
+import Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import Data.Text (Text)
 import Data.Time (UTCTime)
-import Database.Persist (Entity, selectList, SelectOpt(LimitTo))
+import Database.Persist (Entity, SelectOpt(LimitTo), selectList)
 import Database.Persist.Class (Key)
 import Database.Persist.Sql (insert)
-import Database.Persist.Sqlite (runSqlConn, SqlPersist, withSqliteConn)
+import Database.Persist.Sqlite (SqlPersistT, runSqlConn, withSqliteConn)
 import Database.Persist.TH (mkMigrate, mkPersist, persistLowerCase, share, sqlSettings)
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
@@ -32,7 +32,7 @@ Post
     deriving Show
 |]
 
-runDb :: SqlPersist (ResourceT (NoLoggingT IO)) a -> IO a
+runDb :: SqlPersistT (ResourceT (NoLoggingT IO)) a -> IO a
 runDb query = runNoLoggingT . runResourceT . withSqliteConn "dev.sqlite3" . runSqlConn $ query
 
 readPosts :: IO [Entity Post]

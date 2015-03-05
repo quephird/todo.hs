@@ -25,6 +25,7 @@ executable todo-hs
   build-depends:       base ==4.7.*
                      , blaze-html
                      , monad-logger
+                     , old-locale
                      , persistent
                      , persistent-template
                      , persistent-sqlite

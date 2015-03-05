@@ -6,8 +6,10 @@ import Prelude hiding (head)
 
 import Control.Monad (forM_)
 import Control.Monad.IO.Class (liftIO)
+import Data.Time.Format (formatTime)
 import Database.Persist.Sql (entityVal)
-import Text.Blaze.Html5 ((!), body, h1, head, html, li, link, table, td, toHtml, tr, ul)
+import System.Locale (defaultTimeLocale)
+import Text.Blaze.Html5 ((!), body, h1, head, html, li, link, table, td, th, toHtml, tr, ul)
 import Text.Blaze.Html5.Attributes (href, rel, type_)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Web.Scotty as S (html)
@@ -23,7 +25,7 @@ renderPost post = do
     td $ (toHtml createdAt) where
       title = postTitle post
       content = postContent post
-      createdAt = show $ postCreatedAt post
+      createdAt = (formatTime defaultTimeLocale "%B %e, %Y %H:%M:%S") $ postCreatedAt post
 
 renderPosts = do
   _posts <- liftIO readPosts
@@ -35,4 +37,8 @@ renderPosts = do
       body $ do
         h1 "My todo list"
         table $ do
+          tr $ do
+            th $ "Title"
+            th $ "Description"
+            th $ "Date created"
           forM_ posts $ \post -> renderPost post
