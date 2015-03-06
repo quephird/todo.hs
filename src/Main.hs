@@ -23,11 +23,12 @@ main = do
   scotty 3000 $ do
     middleware $ staticPolicy (noDots >-> addBase "static")
 
-    get "/create/:title" $ do
+    get "/create" $ do
       _title <- param "title"
+      _content <- param "content"
       now <- liftIO getCurrentTime
-      savePost _title "some content" now
+      savePost _title _content now
       redirect "/"
 
     get "/" $ do
-      renderPosts
+      renderList

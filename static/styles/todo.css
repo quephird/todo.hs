@@ -1,9 +1,9 @@
 table {
     border-collapse: collapse;
     border-spacing: 0;
-    width:70%;
-    margin-left:15%;
-    margin-right:15%;
+    margin-left: 15%;
+    margin-right: 15%;
+    width: 70%;
 }
 
 th {
@@ -18,7 +18,21 @@ tr:nth-child(odd) {
 }
 
 th, td {
-   border: none;
-   padding: 5;
-   margin: 0;
+     border: none;
+     padding: 5;
+     margin: 0;
+}
+
+#newTodoForm {
+    margin-left: 15%;
+    margin-right: 15%;
+    width: 70%;
+}
+
+#newTitle {
+    width: 200;
+}
+
+#newContent {
+    width: 500;   
 }
