@@ -29,6 +29,7 @@ Post
     title String
     content Text
     createdAt UTCTime
+    done Bool
     deriving Show
 |]
 
@@ -39,4 +40,4 @@ readPosts :: IO [Entity Post]
 readPosts = (runDb $ selectList [] [LimitTo 10])
 
 savePost ::  MonadIO m => String -> Text -> UTCTime -> m (Key Post)
-savePost title content time = liftIO $ runDb $ insert $ Post title content time
+savePost title content time = liftIO $ runDb $ insert $ Post title content time False

@@ -9,8 +9,9 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Time.Format (formatTime)
 import Database.Persist.Sql (entityVal)
 import System.Locale (defaultTimeLocale)
-import Text.Blaze.Html5 ((!), body, button, div, form, h1, head, html, input, li, link, table, td, th, toHtml, tr, ul)
-import Text.Blaze.Html5.Attributes (action, href, id, name, rel, type_)
+import Text.Blaze.Html5 ((!), body, button, div, form, h1, head, html, img,
+                         input, li, link, table, td, th, toHtml, tr, ul)
+import Text.Blaze.Html5.Attributes (action, href, id, name, rel, src, type_)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Web.Scotty as S (html)
 
@@ -36,10 +37,15 @@ renderPost post = do
   tr $ do
     td $ (toHtml title)
     td $ (toHtml content)
-    td $ (toHtml createdAt) where
-      title = postTitle post
-      content = postContent post
-      createdAt = (formatTime defaultTimeLocale "%B %e, %Y %H:%M:%S") $ postCreatedAt post
+    td $ (toHtml createdAt)
+    td $ do
+      if done
+        then img ! src "/images/check-icon.png"
+        else "" where
+          title = postTitle post
+          content = postContent post
+          createdAt = (formatTime defaultTimeLocale "%B %e, %Y %H:%M:%S") $ postCreatedAt post
+          done = postDone post
 
 renderPosts posts = do
   table $ do
