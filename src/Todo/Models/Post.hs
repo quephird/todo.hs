@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -fno-warn-orphans       #-}
-
 module Todo.Models.Post where
 
 import Control.Monad.IO.Class (MonadIO, liftIO)

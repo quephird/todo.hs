@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -fno-warn-orphans #-}
-
 import Control.Monad.IO.Class (liftIO)
 import Data.Time (getCurrentTime)
 import Database.Persist.Sql (runMigration)
