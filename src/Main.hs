@@ -19,5 +19,10 @@ main = do
       savePost _title _content now
       redirect "/"
 
+    get "/delete" $ do
+        _id <- param "id"
+        deletePost _id
+        redirect "/"
+
     get "/" $ do
       renderList

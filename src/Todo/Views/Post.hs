@@ -7,9 +7,10 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Time.Format (formatTime)
 import Database.Persist.Sql (entityKey, entityVal, fromSqlKey)
 import System.Locale (defaultTimeLocale)
+--import Text.Blaze (toValue)
 import Text.Blaze.Html5 ((!), body, button, div, form, h1, head, html, img,
-                         input, li, link, table, td, th, toHtml, tr, ul)
-import Text.Blaze.Html5.Attributes (action, href, id, name, rel, src, type_)
+                         input, li, link, table, td, th, toHtml, toValue, tr, ul)
+import Text.Blaze.Html5.Attributes (action, href, id, name, rel, src, type_, value)
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Web.Scotty as S (html)
 
@@ -40,7 +41,12 @@ renderPost post = do
     td $ do
       if done
         then "Yes"
-        else "No" where
+        else "No"
+    td $ do
+      form ! action "/delete" $ do
+        input ! name "id" ! type_ "hidden" ! value (toValue id_)
+        button "Delete" ! type_ "submit"
+      where
           id_ = fromSqlKey $ entityKey post
           _post = entityVal post
           title = postTitle _post
@@ -56,6 +62,7 @@ renderPosts posts = do
       th $ "Description"
       th $ "Date created"
       th $ "Done?"
+      th $ ""
     forM_ posts $ \post -> renderPost post
 
 renderList = do
