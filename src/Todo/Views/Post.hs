@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Todo.Views.Post where
 
 import Prelude hiding (div, head, id)

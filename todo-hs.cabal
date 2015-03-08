@@ -35,3 +35,14 @@ executable todo-hs
                      , time
                      , transformers
                      , wai-middleware-static
+  extensions:          EmptyDataDecls
+                     , FlexibleContexts
+                     , FlexibleInstances
+                     , GADTs
+                     , GeneralizedNewtypeDeriving
+                     , MultiParamTypeClasses
+                     , OverloadedStrings
+                     , QuasiQuotes
+                     , TemplateHaskell
+                     , TypeFamilies
+                     , TypeSynonymInstances
