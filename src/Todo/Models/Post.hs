@@ -5,8 +5,8 @@ import Control.Monad.Logger (NoLoggingT, runNoLoggingT)
 import Control.Monad.Trans.Resource (ResourceT, runResourceT)
 import Data.Text (Text)
 import Data.Time (UTCTime)
-import Database.Persist (Entity, Key, SelectOpt(LimitTo), (==.), deleteWhere, selectList)
-import Database.Persist.Sql (SqlBackend, ToBackendKey, delete, insert, toSqlKey)
+import Database.Persist (Entity, Key, SelectOpt(LimitTo), (=.), deleteWhere, selectList)
+import Database.Persist.Sql (SqlBackend, ToBackendKey, delete, insert, toSqlKey, update)
 import Database.Persist.Sqlite (SqlPersistT, runSqlConn, withSqliteConn)
 import Database.Persist.TH (mkMigrate, mkPersist, persistLowerCase, share, sqlSettings)
 import Database.Persist.Types (PersistValue(PersistInt64))
@@ -31,6 +31,9 @@ savePost title content time = liftIO $ runDb $ insert $ Post title content time 
 
 toKey :: ToBackendKey SqlBackend a => Integer -> Key a
 toKey i = toSqlKey $ fromIntegral (i :: Integer)
+
+markPostAsDone :: MonadIO m => Integer -> UTCTime -> m ()
+markPostAsDone id_ time = liftIO $ runDb $ update (toKey id_ :: PostId) [PostDone =. True]
 
 deletePost :: MonadIO m => Integer -> m ()
 deletePost id_ = liftIO $ runDb $ delete (toKey id_ :: PostId)
