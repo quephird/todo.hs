@@ -5,7 +5,7 @@ import Prelude hiding (div, head, id)
 import Control.Monad (forM_)
 import Control.Monad.IO.Class (liftIO)
 import Data.Time.Format (formatTime)
-import Database.Persist.Sql (entityVal)
+import Database.Persist.Sql (entityKey, entityVal, fromSqlKey)
 import System.Locale (defaultTimeLocale)
 import Text.Blaze.Html5 ((!), body, button, div, form, h1, head, html, img,
                          input, li, link, table, td, th, toHtml, tr, ul)
@@ -33,29 +33,33 @@ renderForm = do
 
 renderPost post = do
   tr $ do
+    td $ (toHtml id_)
     td $ (toHtml title)
     td $ (toHtml content)
     td $ (toHtml createdAt)
     td $ do
       if done
-        then img ! src "/images/check-icon.png"
-        else "" where
-          title = postTitle post
-          content = postContent post
-          createdAt = (formatTime defaultTimeLocale "%B %e, %Y %H:%M:%S") $ postCreatedAt post
-          done = postDone post
+        then "Yes"
+        else "No" where
+          id_ = fromSqlKey $ entityKey post
+          _post = entityVal post
+          title = postTitle _post
+          content = postContent _post
+          createdAt = (formatTime defaultTimeLocale "%B %e, %Y %H:%M:%S") $ postCreatedAt _post
+          done = postDone _post
 
 renderPosts posts = do
   table $ do
     tr $ do
+      th $ "ID"
       th $ "Title"
       th $ "Description"
       th $ "Date created"
+      th $ "Done?"
     forM_ posts $ \post -> renderPost post
 
 renderList = do
-  _posts <- liftIO readPosts
-  let posts = map entityVal _posts
+  posts <- liftIO readPosts
   blaze $ do
     renderTop
     renderForm
