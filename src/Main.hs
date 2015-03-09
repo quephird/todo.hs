@@ -4,8 +4,8 @@ import Database.Persist.Sql (runMigration)
 import Network.Wai.Middleware.Static ((>->), addBase, noDots, staticPolicy)
 import Web.Scotty (Parsable, delete, get, param, middleware, post, redirect, scotty)
 
-import Todo.Models.Post
-import Todo.Views.Post
+import Models.Task
+import Views.Task
 
 main = do
   runDb $ runMigration migrateAll
@@ -19,16 +19,16 @@ main = do
       _title <- param "title"
       _content <- param "content"
       now <- liftIO getCurrentTime
-      savePost _title _content now
+      saveTask _title _content now
       redirect "/todos"
 
     post "/todo/mark_as_done" $ do
       _id <- param "id"
       now <- liftIO getCurrentTime
-      markPostAsDone _id now
+      markTaskAsDone _id now
       redirect "/todos"
 
     get "/todo/delete" $ do
       _id <- param "id"
-      deletePost _id
+      deleteTask _id
       redirect "/todos"

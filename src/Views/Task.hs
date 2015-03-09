@@ -1,4 +1,4 @@
-module Todo.Views.Post where
+module Views.Task where
 
 import Prelude hiding (div, head, id)
 
@@ -13,7 +13,7 @@ import Text.Blaze.Html5.Attributes (action, href, id, method, name, rel, src, ty
 import Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Web.Scotty as S (html)
 
-import Todo.Models.Post
+import Models.Task
 
 blaze = S.html . renderHtml
 
@@ -31,7 +31,7 @@ renderForm = do
       input ! id "newContent" ! name "content" ! type_ "text"
       button "Make todo!" ! type_ "submit"
 
-renderPost post = do
+renderTask task = do
   tr $ do
     td $ (toHtml id_)
     td $ (toHtml title)
@@ -50,14 +50,14 @@ renderPost post = do
         input ! name "id" ! type_ "hidden" ! value (toValue id_)
         button "Delete" ! type_ "submit"
       where
-          id_ = fromSqlKey $ entityKey post
-          _post = entityVal post
-          title = postTitle _post
-          content = postContent _post
-          createdAt = (formatTime defaultTimeLocale "%B %e, %Y %H:%M:%S") $ postCreatedAt _post
-          done = postDone _post
+          id_ = fromSqlKey $ entityKey task
+          _task = entityVal task
+          title = taskTitle _task
+          content = taskContent _task
+          createdAt = (formatTime defaultTimeLocale "%B %e, %Y %H:%M:%S") $ taskCreatedAt _task
+          done = taskDone _task
 
-renderPosts posts = do
+renderTasks tasks = do
   table $ do
     tr $ do
       th $ "ID"
@@ -67,11 +67,11 @@ renderPosts posts = do
       th $ "Done?"
       th $ ""
       th $ ""
-    forM_ posts $ \post -> renderPost post
+    forM_ tasks $ \task -> renderTask task
 
 renderList = do
-  posts <- liftIO readPosts
+  tasks <- liftIO readTasks
   blaze $ do
     renderTop
     renderForm
-    renderPosts posts
+    renderTasks tasks

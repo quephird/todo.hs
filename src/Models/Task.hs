@@ -1,4 +1,4 @@
-module Todo.Models.Post where
+module Models.Task where
 
 import Control.Monad.IO.Class (MonadIO, liftIO)
 import Control.Monad.Logger (NoLoggingT, runNoLoggingT)
@@ -12,7 +12,7 @@ import Database.Persist.TH (mkMigrate, mkPersist, persistLowerCase, share, sqlSe
 import Database.Persist.Types (PersistValue(PersistInt64))
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
-Post
+Task
     title String
     content Text
     createdAt UTCTime
@@ -23,17 +23,17 @@ Post
 runDb :: SqlPersistT (ResourceT (NoLoggingT IO)) a -> IO a
 runDb query = runNoLoggingT . runResourceT . withSqliteConn "dev.sqlite3" . runSqlConn $ query
 
-readPosts :: IO [Entity Post]
-readPosts = (runDb $ selectList [] [LimitTo 10])
+readTasks :: IO [Entity Task]
+readTasks = (runDb $ selectList [] [LimitTo 10])
 
-savePost ::  MonadIO m => String -> Text -> UTCTime -> m (Key Post)
-savePost title content time = liftIO $ runDb $ insert $ Post title content time False
+saveTask ::  MonadIO m => String -> Text -> UTCTime -> m (Key Task)
+saveTask title content time = liftIO $ runDb $ insert $ Task title content time False
 
 toKey :: ToBackendKey SqlBackend a => Integer -> Key a
 toKey i = toSqlKey $ fromIntegral (i :: Integer)
 
-markPostAsDone :: MonadIO m => Integer -> UTCTime -> m ()
-markPostAsDone id_ time = liftIO $ runDb $ update (toKey id_ :: PostId) [PostDone =. True]
+markTaskAsDone :: MonadIO m => Integer -> UTCTime -> m ()
+markTaskAsDone id_ time = liftIO $ runDb $ update (toKey id_ :: TaskId) [TaskDone =. True]
 
-deletePost :: MonadIO m => Integer -> m ()
-deletePost id_ = liftIO $ runDb $ delete (toKey id_ :: PostId)
+deleteTask :: MonadIO m => Integer -> m ()
+deleteTask id_ = liftIO $ runDb $ delete (toKey id_ :: TaskId)
