@@ -4,9 +4,8 @@ import Prelude hiding (div, head, id)
 
 import Control.Monad (forM_)
 import Control.Monad.IO.Class (liftIO)
-import Data.Time.Format (formatTime)
+import Data.Time.Format (defaultTimeLocale, formatTime)
 import Database.Persist.Sql (entityKey, entityVal, fromSqlKey)
-import System.Locale (defaultTimeLocale)
 import Text.Blaze.Html5 ((!), body, button, div, form, h1, head, html, img,
                          input, li, link, table, td, th, toHtml, toValue, tr, ul)
 import Text.Blaze.Html5.Attributes (action, href, id, method, name, rel, src, type_, value)
